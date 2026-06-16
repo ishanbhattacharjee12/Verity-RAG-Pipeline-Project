@@ -6,7 +6,7 @@ import type { Citation } from '../api/types';
  * that pop the cited chunk's excerpt.
  */
 export function AnswerText({ answer, citations }: { answer: string; citations: Citation[] }) {
-  const [hovered, setHovered] = useState<number | null>(null);
+  const [hoveredKey, setHoveredKey] = useState<number | null>(null);
   const byIndex = new Map(citations.map((c) => [c.index, c]));
   const parts = answer.split(/(\[\d+\])/g);
 
@@ -20,8 +20,8 @@ export function AnswerText({ answer, citations }: { answer: string; citations: C
         return (
           <span key={i} className="relative inline-block">
             <button
-              onMouseEnter={() => setHovered(index)}
-              onMouseLeave={() => setHovered(null)}
+              onMouseEnter={() => setHoveredKey(i)}
+              onMouseLeave={() => setHoveredKey(null)}
               className={`mx-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded px-1 align-text-top text-xs font-semibold ${
                 citation?.verified === false
                   ? 'bg-red-100 text-red-700'
@@ -30,8 +30,8 @@ export function AnswerText({ answer, citations }: { answer: string; citations: C
             >
               {index}
             </button>
-            {hovered === index && citation && (
-              <span className="absolute bottom-full left-1/2 z-20 mb-2 block w-72 -translate-x-1/2 rounded-lg border border-slate-200 bg-white p-3 text-xs shadow-xl">
+            {hoveredKey === i && citation && (
+              <span className="absolute bottom-full left-1/2 z-50 mb-2 block w-72 -translate-x-1/2 rounded-lg border border-slate-200 bg-white p-3 text-left text-xs shadow-xl">
                 <span className="mb-1 block font-semibold text-slate-700">
                   {citation.source_document}
                   {citation.section_heading ? ` — ${citation.section_heading}` : ''}
