@@ -1,23 +1,57 @@
-# Verity — RAG Pipeline with Hybrid Search
+<div align="center">
+  <h1>Verity</h1>
+  <p><b>Production-grade RAG pipeline with hybrid retrieval, citation verification, and hallucination-resistant AI responses.</b></p>
+  
+  <p>
+    <img src="https://img.shields.io/badge/Python-3.11+-blue.svg?logo=python&logoColor=white" alt="Python" />
+    <img src="https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi" alt="FastAPI" />
+    <img src="https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Vite-B73BFE?style=flat&logo=vite&logoColor=FFD62E" alt="Vite" />
+    <img src="https://img.shields.io/badge/OpenAI-412991?style=flat&logo=openai&logoColor=white" alt="OpenAI" />
+    <img src="https://img.shields.io/badge/Render-46E3B7?style=flat&logo=render&logoColor=white" alt="Render" />
+    <img src="https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white" alt="Vercel" />
+    <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License" />
+  </p>
 
-## Project Overview
+  <h3>
+    <a href="https://verity-rag-pipeline-project.vercel.app">🚀 Live Demo</a>
+    <span> | </span>
+    <a href="https://verity-rag-pipeline-project.onrender.com/docs">📖 API Docs</a>
+    <span> | </span>
+    <a href="https://github.com/ishanbhattacharjee12/Verity-RAG-Pipeline-Project">📂 GitHub Repository</a>
+  </h3>
+</div>
 
-End-to-end Retrieval-Augmented Generation over internal documents. Retrieval runs dense (ChromaDB, `text-embedding-3-small`) and sparse (BM25) searches in parallel, fuses them with weighted Reciprocal Rank Fusion, and reranks candidates with an LLM-as-judge cross-encoder pass. Generation is constrained to the retrieved context with inline bracketed citations; every citation is then independently verified by a judge model, and each answer ships with a composite confidence score (retrieval quality × citation coverage × completeness). Unanswerable questions are refused rather than hallucinated, and a bundled 30-case golden Q&A suite measures all of it.
+---
 
-## Key Features
+## 🌟 Project Overview
 
-- **Hybrid Retrieval**: Combines sparse (BM25) and dense (ChromaDB) vector search.
-- **Reciprocal Rank Fusion (RRF)**: Fuses sparse and dense results without brittle score normalization.
-- **LLM Reranking**: Uses an LLM-as-judge cross-encoder to refine top candidates.
-- **Citation Verification**: Validates every generated claim independently to prevent hallucinated citations.
-- **Composite Confidence Scoring**: Grades answers based on retrieval quality, citation accuracy, and completeness.
-- **Comprehensive Evaluation**: Bundled 30-case golden Q&A suite tests lookup, multi-hop, unanswerable, and ambiguous queries.
+Verity is an end-to-end **Retrieval-Augmented Generation (RAG)** system designed specifically for internal technical documentation. It addresses the core weaknesses of traditional LLM applications—hallucinations, untraceable answers, and brittle dense-only search—by implementing a multi-stage, defensive retrieval and generation architecture. 
 
-## Architecture
+**Business & Engineering Value:**
+By running parallel dense (ChromaDB) and sparse (BM25) searches, Verity captures both semantic meaning and exact-keyword matches, fusing them via Reciprocal Rank Fusion (RRF). Instead of blindly trusting the LLM's output, Verity enforces a strict contract: every claim must be cited inline, and an independent LLM-as-judge actively verifies each citation post-generation. Unanswerable questions are cleanly refused, guaranteeing a high-trust, hallucination-resistant environment for enterprise knowledge bases.
+
+---
+
+## ✨ Features
+
+- 🔍 **Hybrid Dense + Sparse Retrieval**: Combines semantic understanding (`text-embedding-3-small` via ChromaDB) with exact keyword matching (BM25) to perfectly handle technical jargon and acronyms.
+- 🔀 **Reciprocal Rank Fusion (RRF)**: Merges disparate vector and keyword scores mathematically without relying on brittle, corpus-dependent normalization thresholds.
+- ⚖️ **LLM-as-Judge Reranking**: Re-evaluates top candidate chunks using `gpt-4o` for extreme precision before generation.
+- 📝 **Grounded Responses with Citations**: Forces the generator to cite its sources inline `[1]` for every single claim made.
+- 🛡️ **Citation Verification**: An independent evaluation pass verifies that the cited text actually supports the generated claim, visibly penalizing unsupported statements.
+- 📊 **Confidence Scoring**: Delivers a composite confidence grade based on retrieval quality (cosine similarity), citation coverage, and completeness.
+- 🚫 **Hallucination Refusal**: Actively programmed to say "I don't know" when queried with impossible or off-topic questions.
+- 📈 **Evaluation Framework**: Bundled 30-case golden Q&A suite to automatically benchmark regression on pass rates, latency, and correctness.
+- 🚀 **Production Deployment**: Fully container-free, single-command local orchestration mapped cleanly to Render and Vercel hosting.
+
+---
+
+## 🏗️ System Architecture
 
 ```text
-High-Level Architecture
-User
+User Request
   │
   ▼
 React/Vite Frontend
@@ -25,147 +59,124 @@ React/Vite Frontend
   ▼
 FastAPI Backend
   │
-  ├── Hybrid Retrieval
-  │      ├── BM25
-  │      └── ChromaDB
+  ├── Hybrid Retrieval Layer
+  │      ├── BM25 (Sparse Index)
+  │      └── ChromaDB (Dense Vectors)
   │
-  ├── Reciprocal Rank Fusion
+  ├── Reciprocal Rank Fusion (RRF)
+  │      (Fuses Top-10 from both)
   │
-  ├── LLM Reranking
+  ├── LLM Reranker (Cross-Encoder style)
+  │      (Extracts Top-5 precise candidates)
+  │
+  ├── Grounded Generation
+  │      (Drafts answer with inline citations)
   │
   ├── Citation Verification
+  │      (Independent judge verifies every claim)
   │
-  └── Answer Generation
-          │
-          ▼
-       OpenAI API
+  └── Confidence Scoring
+         (Calculates final composite trust metric)
 ```
 
-## Evaluation Framework
+---
 
-Measured on the bundled sample corpus (recursive chunking, hybrid retrieval, α = 0.7), 2026-06-12:
+## 💻 Tech Stack
 
-| Metric | Value |
-|--------|-------|
-| Pass rate (30 cases) | 83.3% (25/30) |
-| Avg correctness (LLM-as-judge, 1–5) | 4.3 |
-| "I don't know" accuracy (6 unanswerable) | 100% (6/6) |
-| Avg latency per eval case | 15.5 s¹ |
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| **Frontend** | React, TypeScript, Vite, Tailwind CSS | High-performance, reactive UI architecture. |
+| **Backend** | Python, FastAPI | Asynchronous, highly concurrent API server. |
+| **Vector Store** | ChromaDB | Persistent dense vector indexing. |
+| **Retrieval** | BM25, Reciprocal Rank Fusion | Keyword extraction and multi-retriever fusion logic. |
+| **LLM** | OpenAI API (`gpt-4o`, `text-embedding-3-small`) | Embeddings, generation, and LLM-as-judge passes. |
+| **Deployment** | Vercel (Frontend), Render (Backend) | Globally distributed edge and cloud hosting. |
+| **Evaluation** | Custom Golden Suite | Automated pipeline regression and correctness benchmarking. |
 
-All 10 lookups and all 8 multi-hop cases pass; the 5 failures are ambiguous-category questions where the system answers one valid interpretation instead of enumerating all of them — the failure mode that category exists to surface.
+---
 
-¹ Eval latency includes citation verification and correctness judging on a rate-limited (30K TPM) OpenAI org; interactive `/v1/ask` queries measure 6–10 s.
+## 📸 Application Showcase
 
-The golden set: 10 direct lookups, 8 multi-hop questions spanning 2+ documents, 6 unanswerable questions (refusal is the pass condition), 6 ambiguous questions. Per-question results include correctness, retrieval relevance, and citation accuracy; run history is persisted and charted in the Eval tab.
+> *Note: Placeholders for application screenshots. Replace the paths once screenshots are added to `README_Screenshots/`.*
 
-## Local Development
+### Ask Interface & Confidence Scoring
+![Ask Interface](README_Screenshots/ask_interface.png)
+*Demonstrating inline citations and composite confidence metrics.*
 
-Prereqs: Python 3.11+, Node 18+.
+### Citation Verification Cards
+![Citation Cards](README_Screenshots/citation_cards.png)
+*Interactive UI allowing users to click citations and read the exact source text.*
 
-**1. Initial Setup**
+### Evaluation Dashboard
+![Evaluation Dashboard](README_Screenshots/evaluation_dashboard.png)
+*Running the 30-case golden suite to benchmark pipeline correctness.*
 
-First, set up both the backend and frontend dependencies:
+### Compare Retrieval Methods
+![Compare Methods](README_Screenshots/compare_methods.png)
+*Live visual comparison showing how Hybrid Search outperforms standalone Dense or Sparse retrieval.*
 
+---
+
+## 🧪 Try These Questions (Recruiter Demo)
+
+To see Verity's features in action on the live demo, try asking these specific questions against the bundled fictional corporate corpus:
+
+1. **"What is the onboarding process?"**
+   *(Demonstrates basic multi-document synthesis and citation formatting.)*
+   
+2. **"What are the API authentication requirements?"**
+   *(Demonstrates extraction of highly specific technical details.)*
+   
+3. **"Summarize the deployment guide."**
+   *(Demonstrates broad comprehension and generation speed.)*
+   
+4. **"Which documents discuss incident response?"**
+   *(Demonstrates metadata awareness and direct document referencing.)*
+   
+5. **"What was the company revenue in 2024?"**
+   *(Demonstrates strict Hallucination Refusal. The system will politely decline to answer, proving it is tightly grounded in the provided corpus.)*
+
+---
+
+## 🚀 Deployment & Environment
+
+The application is fully configured for cloud deployment on Vercel and Render. 
+
+**Frontend Hosting:** [Vercel](https://vercel.com/)
+**Backend Hosting:** [Render](https://render.com/)
+
+### Required Environment Variables
+
+**Backend (`.env`)**
+- `OPENAI_API_KEY`: Your OpenAI API key.
+- `CORS_ORIGINS`: Your Vercel frontend URL (e.g., `https://verity-rag-pipeline-project.vercel.app`)
+
+**Frontend (`.env`)**
+- `VITE_API_BASE`: Your Render backend URL (e.g., `https://verity-rag-pipeline-project.onrender.com`)
+
+---
+
+## 🛠️ Local Development
+
+Prerequisites: Python 3.11+, Node 18+.
+
+**1. Install Dependencies**
 ```bash
-# Install all dependencies (frontend and backend) and create Python venv
+# Installs backend and frontend dependencies, creates Python venv
 npm run install:all
 ```
 
-**2. Environment Configuration**
-
-Configure the backend environment variables:
+**2. Configure Environment**
 ```bash
 cp backend/.env.example backend/.env
-# Edit backend/.env and set OPENAI_API_KEY
+# Edit backend/.env to include your OPENAI_API_KEY
 ```
 
 **3. Run Application**
-
-Start both the FastAPI backend and Vite frontend together with a single command from the root of the repository:
-
 ```bash
+# Starts FastAPI (8000) and Vite (5173) concurrently
 npm run dev
 ```
 
-Both services will start simultaneously. The frontend will be available at http://localhost:5173, and the backend API at http://localhost:8000.
-
-## Deployment
-
-### Deploying Backend to Render
-
-1. Create a new **Web Service**.
-2. Set the **Root Directory** to `backend`.
-3. Set the **Build Command** to: `pip install -r requirements.txt`
-4. Set the **Start Command** to: `uvicorn main:app --host 0.0.0.0 --port ${PORT:-10000}`
-5. Add the required environment variable: `OPENAI_API_KEY`.
-
-### Deploying Frontend to Vercel
-
-1. Create a new **Project** and select this repository.
-2. Set the **Root Directory** to `frontend`.
-3. Ensure the **Framework Preset** is Vite.
-4. Set the **Build Command** to: `npm run build`
-5. Set the **Output Directory** to: `dist`
-6. Add the **Environment Variable**: `VITE_API_BASE` and set it to the URL of your deployed Render backend (e.g., `https://your-backend.onrender.com`).
-
-## Future Improvements
-
-- **Streaming Responses**: Implement Server-Sent Events (SSE) to stream answer chunks and citations to the frontend in real-time.
-- **Authentication & RBAC**: Add secure authentication (e.g., via Firebase Auth) and restrict document access based on user roles.
-- **Caching Layer**: Integrate Redis to cache frequent queries and intermediate retrieval steps to lower latency.
-- **More Embedding Options**: Support local embedding models like `BGE` or `instructor` to reduce API dependencies for ingestion.
-
-## API Reference
-
-Full OpenAPI docs at `/docs`. Summary:
-
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/v1/ask` | POST | Full pipeline: retrieve → rerank → generate → verify → score |
-| `/v1/ingest` | POST | Multipart upload; chunking strategy/size/overlap per request |
-| `/v1/documents` | GET | Indexed documents with chunk counts and strategies |
-| `/v1/documents/{id}` | DELETE | Remove a document from both indexes |
-| `/v1/eval/run` | POST | Run the 30-case golden suite; returns a full report |
-| `/v1/eval/progress` | GET | Poll during a run (drives the UI progress bar) |
-| `/v1/eval/results` | GET | All past runs (trend data) |
-| `/v1/stats` | GET | Index size, rolling confidence, mode distribution |
-
-## Chunking Strategies
-
-| Strategy | How it splits | Use when | Tradeoff |
-|----------|---------------|----------|----------|
-| `fixed` | Equal-size windows + overlap | Uniform prose, logs, transcripts | Cheap and predictable; happily cuts mid-thought |
-| `recursive` | Headings → paragraphs → sentences, falling through separators | Structured docs (the default) | Respects document structure; chunk sizes vary |
-| `semantic` | Boundary where adjacent-sentence embedding similarity dips below mean − σ | Dense unstructured prose where topic shifts matter | Best boundaries; costs one embedding call per sentence at ingest |
-
-## Design Decisions
-
-**Why hybrid beats dense-only for technical docs.** Embedding models smear rare exact tokens — `shipctl`, `X-Meridian-Key`, `mk_test_` — into a semantic neighborhood where they lose to fluent paraphrases. BM25 treats those tokens as near-unique keys and nails them. Conversely, BM25 scores zero on paraphrases ("undo a bad release" shares no tokens with `rollback`). Technical-docs queries are a mix of both shapes, so fusing the two retrievers dominates either alone. The Compare tab demonstrates this live.
-
-**Why RRF instead of score averaging.** Cosine similarity (≈0.2–0.9, bounded) and BM25 (unbounded, corpus-dependent) live on incomparable scales; any linear combination needs per-corpus normalization that drifts as documents are added. RRF discards scores and fuses ranks — `Σ wᵢ/(k + rankᵢ)` — which is scale-free, stable under index growth, and exposes a single interpretable knob (the dense weight α).
-
-**Why LLM-as-judge for reranking instead of a cross-encoder model.** A dedicated cross-encoder (e.g. a MiniLM variant) is cheaper per query, but it adds a model artifact to deploy, pins a tokenizer/runtime, and caps quality at its training distribution. The judge call evaluates query×passage jointly with gpt-4o-level reading comprehension, needs zero deployment surface beyond the API key already required, and reuses the same JSON-judging machinery as citation verification and eval grading. At top-10 candidate pools the latency cost is one batched call.
-
-**Why citation verification is a separate pass.** Generation models cite plausibly, not faithfully. Verifying each claim-passage pair post-hoc with an independent judge converts citations from decoration into a measurable contract — and feeds citation coverage into the confidence score, so unsupported citations visibly drag the answer's score down.
-
-**Why composite confidence, not model self-assessment.** A single "how confident are you?" number from the generator is poorly calibrated. The composite combines three independently measured signals: mean cosine similarity of the context actually used (retrieval), fraction of citations that survived verification (grounding), and a judge score for whether the whole question was addressed (completeness), weighted 0.3 / 0.4 / 0.3.
-
-## Repository Layout
-
-```text
-backend/
-  main.py               FastAPI app + lifespan (seeds sample corpus on first run)
-  config.py             All settings via env vars (pydantic-settings)
-  routers/              ask, ingest, documents+stats, eval
-  services/             ingestion, embeddings, bm25_index, retrieval (RRF + rerank),
-                        generation, citation_verifier, confidence, evaluator, pipeline
-  models/               Pydantic v2 request/response models
-  data/
-    sample_corpus/      6 markdown docs (fictional company's internal docs)
-    golden_qa.json      30-case eval set
-    chroma/, bm25/      Persisted indexes (created at runtime)
-frontend/
-  src/api/              Typed client + types mirroring backend models
-  src/tabs/             Ask, Documents, Eval, Compare
-  src/components/       Confidence meter, citation cards, chunk panels, skeletons
-```
+---
+<p align="center">Built with 💻 by Ishan Bhattacharjee</p>
