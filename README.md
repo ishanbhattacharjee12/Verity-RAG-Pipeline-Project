@@ -97,22 +97,24 @@ FastAPI Backend
 
 ## 📸 Application Showcase
 
-> *Note: Placeholders for application screenshots. Replace the paths once screenshots are added to `README_Screenshots/`.*
+### 1. System Overview Dashboard
+![Overview Dashboard](README_Screenshots/Screenshot_1.png)
+*Live insights and system map showing indexed chunks, retrieval health, and system components.*
 
-### Ask Interface & Confidence Scoring
-![Ask Interface](README_Screenshots/ask_interface.png)
-*Demonstrating inline citations and composite confidence metrics.*
+### 2. Ask Interface & Confidence Scoring
+![Ask Interface](README_Screenshots/Screenshot_2.png)
+*Demonstrating inline citations, retrieval tuning sliders, and composite confidence metrics.*
 
-### Citation Verification Cards
-![Citation Cards](README_Screenshots/citation_cards.png)
-*Interactive UI allowing users to click citations and read the exact source text.*
+### 3. Document Management
+![Document Management](README_Screenshots/Screenshot_3.png)
+*Interactive UI for uploading, defining chunking strategies, and curating the knowledge base.*
 
-### Evaluation Dashboard
-![Evaluation Dashboard](README_Screenshots/evaluation_dashboard.png)
-*Running the 30-case golden suite to benchmark pipeline correctness.*
+### 4. Evaluation Dashboard
+![Evaluation Dashboard](README_Screenshots/Screenshot_4.png)
+*Running the 30-case golden suite to benchmark pipeline correctness and test hallucination traps.*
 
-### Compare Retrieval Methods
-![Compare Methods](README_Screenshots/compare_methods.png)
+### 5. Compare Retrieval Methods
+![Compare Methods](README_Screenshots/Screenshot_5.png)
 *Live visual comparison showing how Hybrid Search outperforms standalone Dense or Sparse retrieval.*
 
 ---
