@@ -1,212 +1,264 @@
 [
   {
-    "id": "lookup-01",
-    "question": "How many attention heads does the base Transformer model use?",
-    "expected_answer": "The base Transformer uses 8 parallel attention heads (h=8), with d_model=512 split into 64-dimensional keys/values per head.",
+    "id": "auth-01",
+    "question": "How do server-to-server integrations authenticate?",
+    "expected_answer": "With an API key passed in the X-Meridian-Key request header.",
     "answer_type": "lookup",
-    "expected_sources": ["attention-is-all-you-need.pdf"]
+    "expected_sources": [
+      "api-authentication.md"
+    ]
   },
   {
-    "id": "lookup-02",
-    "question": "What BLEU score did the big Transformer model achieve on the WMT 2014 English-to-German translation task?",
-    "expected_answer": "28.4 BLEU, establishing a new state of the art at the time.",
+    "id": "auth-02",
+    "question": "Are legacy v1 endpoints still supported?",
+    "expected_answer": "No, they were decommissioned on 2025-03-31.",
     "answer_type": "lookup",
-    "expected_sources": ["attention-is-all-you-need.pdf"]
+    "expected_sources": [
+      "api-authentication.md"
+    ]
   },
   {
-    "id": "lookup-03",
-    "question": "What are the two pre-training tasks used by BERT?",
-    "expected_answer": "Masked language modeling (randomly masking tokens and predicting them) and next sentence prediction.",
+    "id": "auth-03",
+    "question": "What is the token endpoint for OAuth 2.0?",
+    "expected_answer": "https://auth.meridian.dev/oauth/token",
     "answer_type": "lookup",
-    "expected_sources": ["bert-pretraining.pdf"]
+    "expected_sources": [
+      "api-authentication.md"
+    ]
   },
   {
-    "id": "lookup-04",
-    "question": "How many parameters does GPT-3 have?",
-    "expected_answer": "175 billion parameters.",
+    "id": "auth-04",
+    "question": "How often must API keys be rotated?",
+    "expected_answer": "Every 90 days.",
     "answer_type": "lookup",
-    "expected_sources": ["gpt3-few-shot-learners.pdf"]
+    "expected_sources": [
+      "api-authentication.md"
+    ]
   },
   {
-    "id": "lookup-05",
-    "question": "Which retriever and which generator does the RAG model combine?",
-    "expected_answer": "A dense passage retriever (DPR) over a dense vector index of Wikipedia, combined with a pre-trained BART seq2seq generator.",
+    "id": "auth-05",
+    "question": "What happens if a webhook endpoint does not respond within 10 seconds?",
+    "expected_answer": "The delivery is retried up to 5 times with exponential backoff.",
     "answer_type": "lookup",
-    "expected_sources": ["retrieval-augmented-generation.pdf"]
+    "expected_sources": [
+      "api-authentication.md"
+    ]
   },
   {
-    "id": "lookup-06",
-    "question": "What are the two RAG formulations described in the paper?",
-    "expected_answer": "RAG-Sequence, which conditions on the same retrieved passage for the whole output sequence, and RAG-Token, which can use different retrieved passages per token.",
+    "id": "auth-06",
+    "question": "How many active keys can a project hold?",
+    "expected_answer": "At most 10 active keys.",
     "answer_type": "lookup",
-    "expected_sources": ["retrieval-augmented-generation.pdf"]
+    "expected_sources": [
+      "api-authentication.md"
+    ]
   },
   {
-    "id": "lookup-07",
-    "question": "What is chain-of-thought prompting?",
-    "expected_answer": "A prompting technique where few-shot exemplars include intermediate natural-language reasoning steps leading to the final answer, which improves performance on arithmetic, commonsense, and symbolic reasoning tasks.",
+    "id": "retention-01",
+    "question": "Who is the policy owner for data retention?",
+    "expected_answer": "The Data Protection Officer (dpo@meridian.dev).",
     "answer_type": "lookup",
-    "expected_sources": ["chain-of-thought-prompting.pdf"]
+    "expected_sources": [
+      "data-retention-policy.md"
+    ]
   },
   {
-    "id": "lookup-08",
-    "question": "What are the two training stages of Constitutional AI?",
-    "expected_answer": "A supervised learning stage where the model critiques and revises its own responses according to constitutional principles, followed by a reinforcement learning stage using AI-generated preference labels (RLAIF) instead of human feedback.",
+    "id": "deploy-01",
+    "question": "What tool is used for all Meridian deployments?",
+    "expected_answer": "shipctl, an internal wrapper around the Argo-based delivery platform.",
     "answer_type": "lookup",
-    "expected_sources": ["constitutional-ai.pdf"]
+    "expected_sources": [
+      "deployment-guide.md"
+    ]
   },
   {
-    "id": "lookup-09",
-    "question": "Why is the dot product scaled by 1 over the square root of dk in scaled dot-product attention?",
-    "expected_answer": "For large dk the dot products grow large in magnitude, pushing the softmax into regions with extremely small gradients; scaling by 1/sqrt(dk) counteracts this effect.",
+    "id": "eng-01",
+    "question": "What prefix is required for custom Prometheus metrics?",
+    "expected_answer": "meridian_",
     "answer_type": "lookup",
-    "expected_sources": ["attention-is-all-you-need.pdf"]
+    "expected_sources": [
+      "engineering-handbook.md"
+    ]
   },
   {
-    "id": "lookup-10",
-    "question": "How many parameters do BERT-Base and BERT-Large have?",
-    "expected_answer": "BERT-Base has 110 million parameters and BERT-Large has 340 million parameters.",
+    "id": "eng-02",
+    "question": "How long do break-glass production sessions last before they expire?",
+    "expected_answer": "4 hours.",
     "answer_type": "lookup",
-    "expected_sources": ["bert-pretraining.pdf"]
+    "expected_sources": [
+      "engineering-handbook.md"
+    ]
   },
   {
-    "id": "multihop-01",
-    "question": "Which architecture do both BERT and GPT-3 build on, and which paper introduced it?",
-    "expected_answer": "Both build on the Transformer architecture, introduced in 'Attention Is All You Need' (Vaswani et al., 2017).",
-    "answer_type": "multi_hop",
-    "expected_sources": ["bert-pretraining.pdf", "gpt3-few-shot-learners.pdf", "attention-is-all-you-need.pdf"]
+    "id": "eng-03",
+    "question": "Where are cause-based alerts routed?",
+    "expected_answer": "They go to Slack, not PagerDuty.",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "engineering-handbook.md"
+    ]
   },
   {
-    "id": "multihop-02",
-    "question": "How does BERT's training objective differ from GPT-3's?",
-    "expected_answer": "BERT uses bidirectional masked language modeling (predicting masked tokens using context from both directions) and is then fine-tuned per task, while GPT-3 is an autoregressive left-to-right language model applied via few-shot in-context learning without fine-tuning.",
-    "answer_type": "multi_hop",
-    "expected_sources": ["bert-pretraining.pdf", "gpt3-few-shot-learners.pdf"]
+    "id": "eng-04",
+    "question": "What is required for every alert in the system?",
+    "expected_answer": "Every alert must link to a runbook.",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "engineering-handbook.md"
+    ]
   },
   {
-    "id": "multihop-03",
-    "question": "How do RAG and GPT-3 differ in how they store and access knowledge?",
-    "expected_answer": "GPT-3 stores knowledge purely parametrically in its weights, while RAG augments a parametric seq2seq model with non-parametric memory — a retrievable dense index of Wikipedia — making knowledge updatable and provenance inspectable.",
-    "answer_type": "multi_hop",
-    "expected_sources": ["retrieval-augmented-generation.pdf", "gpt3-few-shot-learners.pdf"]
+    "id": "eng-05",
+    "question": "Where do third-party dependencies come from?",
+    "expected_answer": "From the internal Artifactory mirror.",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "engineering-handbook.md"
+    ]
   },
   {
-    "id": "multihop-04",
-    "question": "In Constitutional AI, what replaces the human preference labels used in standard RLHF, and what guides that replacement?",
-    "expected_answer": "AI-generated preference labels (RL from AI Feedback, RLAIF) replace human labels for harmlessness, guided by an explicit set of principles called a constitution.",
-    "answer_type": "multi_hop",
-    "expected_sources": ["constitutional-ai.pdf"]
+    "id": "inc-01",
+    "question": "What severity level is assigned to a customer-facing outage?",
+    "expected_answer": "SEV1",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "incident-response.md"
+    ]
   },
   {
-    "id": "multihop-05",
-    "question": "At roughly what model scale does chain-of-thought reasoning emerge, and which paper introduced the few-shot in-context learning paradigm it relies on?",
-    "expected_answer": "Chain-of-thought reasoning is an emergent ability of model scale, yielding gains around 100B+ parameter models; it builds on the few-shot in-context learning paradigm introduced by the GPT-3 paper.",
-    "answer_type": "multi_hop",
-    "expected_sources": ["chain-of-thought-prompting.pdf", "gpt3-few-shot-learners.pdf"]
+    "id": "inc-02",
+    "question": "How soon must the status page be updated for a SEV1 incident?",
+    "expected_answer": "Within 15 minutes of declaration.",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "incident-response.md"
+    ]
   },
   {
-    "id": "multihop-06",
-    "question": "Why do Transformers need positional encodings, and what form do they take in the original paper?",
-    "expected_answer": "Because the model contains no recurrence or convolution, it has no inherent notion of token order, so position information must be injected; the original paper adds sinusoidal positional encodings to the input embeddings (learned positional embeddings performed nearly identically).",
-    "answer_type": "multi_hop",
-    "expected_sources": ["attention-is-all-you-need.pdf"]
+    "id": "inc-03",
+    "question": "What is the Slack command used to declare an incident?",
+    "expected_answer": "/incident declare",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "incident-response.md"
+    ]
   },
   {
-    "id": "multihop-07",
-    "question": "Which half of the Transformer does BERT use, and how does that choice relate to its bidirectionality?",
-    "expected_answer": "BERT uses the Transformer encoder stack; encoder self-attention attends to both left and right context, which is what enables BERT's deeply bidirectional masked-language-model pre-training.",
-    "answer_type": "multi_hop",
-    "expected_sources": ["bert-pretraining.pdf", "attention-is-all-you-need.pdf"]
+    "id": "inc-04",
+    "question": "How quickly must an on-call engineer acknowledge a page?",
+    "expected_answer": "Within 5 minutes.",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "incident-response.md"
+    ]
   },
   {
-    "id": "multihop-08",
-    "question": "How does chain-of-thought prompting differ from the standard few-shot prompting used in the GPT-3 paper?",
-    "expected_answer": "Standard few-shot prompting gives input-output exemplars only, while chain-of-thought prompting augments each exemplar with intermediate reasoning steps, which substantially improves performance on arithmetic, commonsense, and symbolic reasoning at sufficient model scale.",
-    "answer_type": "multi_hop",
-    "expected_sources": ["chain-of-thought-prompting.pdf", "gpt3-few-shot-learners.pdf"]
+    "id": "inc-05",
+    "question": "When is an incident considered officially resolved?",
+    "expected_answer": "When the customer-facing impact has ended.",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "incident-response.md"
+    ]
   },
   {
-    "id": "unanswerable-01",
-    "question": "How many parameters does GPT-4 have?",
-    "expected_answer": "I don't have enough information in the indexed documents to answer this question.",
+    "id": "inc-06",
+    "question": "How many days does the team have to publish a postmortem for a SEV1?",
+    "expected_answer": "Within 5 business days of resolution.",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "incident-response.md"
+    ]
+  },
+  {
+    "id": "inc-07",
+    "question": "Do SEV3 incidents require an immediate page?",
+    "expected_answer": "No, they are handled via Ticket + Slack during business hours.",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "incident-response.md"
+    ]
+  },
+  {
+    "id": "inc-08",
+    "question": "What should the incident commander do if the suspected cause is a recent deploy?",
+    "expected_answer": "Roll back first and investigate second.",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "incident-response.md"
+    ]
+  },
+  {
+    "id": "onb-01",
+    "question": "When does IT typically ship a new hire's laptop?",
+    "expected_answer": "At least 2 business days before the start date.",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "onboarding-guide.md"
+    ]
+  },
+  {
+    "id": "onb-02",
+    "question": "What email address should a new hire contact if their laptop hasn't arrived 2 days out?",
+    "expected_answer": "it-help@meridian.dev",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "onboarding-guide.md"
+    ]
+  },
+  {
+    "id": "onb-03",
+    "question": "What shell command installs the workstation bootstrap?",
+    "expected_answer": "curl -fsSL https://get.meridian.dev/bootstrap | bash",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "onboarding-guide.md"
+    ]
+  },
+  {
+    "id": "onb-04",
+    "question": "How long does manager approval for elevated Okta access take?",
+    "expected_answer": "Up to 1 business day.",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "onboarding-guide.md"
+    ]
+  },
+  {
+    "id": "onb-05",
+    "question": "What is the expected SLA for code reviews?",
+    "expected_answer": "24 hours.",
+    "answer_type": "lookup",
+    "expected_sources": [
+      "onboarding-guide.md"
+    ]
+  },
+  {
+    "id": "hal-01",
+    "question": "What was the company's total revenue in 2024?",
+    "expected_answer": "I don't have enough information to answer that.",
     "answer_type": "unanswerable",
     "expected_sources": []
   },
   {
-    "id": "unanswerable-02",
-    "question": "When was ChatGPT released to the public?",
-    "expected_answer": "I don't have enough information in the indexed documents to answer this question.",
+    "id": "hal-02",
+    "question": "Who is the current CEO of Meridian?",
+    "expected_answer": "I don't have enough information to answer that.",
     "answer_type": "unanswerable",
     "expected_sources": []
   },
   {
-    "id": "unanswerable-03",
-    "question": "Who is the CEO of OpenAI?",
-    "expected_answer": "I don't have enough information in the indexed documents to answer this question.",
+    "id": "hal-03",
+    "question": "What is the exact physical address of the Meridian headquarters?",
+    "expected_answer": "I don't have enough information to answer that.",
     "answer_type": "unanswerable",
     "expected_sources": []
   },
   {
-    "id": "unanswerable-04",
-    "question": "What architectural changes did the LLaMA models introduce?",
-    "expected_answer": "I don't have enough information in the indexed documents to answer this question.",
+    "id": "hal-04",
+    "question": "What BLEU score did the big Transformer achieve?",
+    "expected_answer": "I don't have enough information to answer that.",
     "answer_type": "unanswerable",
     "expected_sources": []
-  },
-  {
-    "id": "unanswerable-05",
-    "question": "How many dollars did it cost to train GPT-3?",
-    "expected_answer": "I don't have enough information in the indexed documents to answer this question.",
-    "answer_type": "unanswerable",
-    "expected_sources": []
-  },
-  {
-    "id": "unanswerable-06",
-    "question": "What benchmark scores does Google's Gemini model achieve?",
-    "expected_answer": "I don't have enough information in the indexed documents to answer this question.",
-    "answer_type": "unanswerable",
-    "expected_sources": []
-  },
-  {
-    "id": "ambiguous-01",
-    "question": "How many parameters does the model have?",
-    "expected_answer": "Depends which model: the base Transformer has 65M parameters (213M for the big variant), BERT-Base 110M and BERT-Large 340M, and GPT-3 175B. A good answer asks which model or enumerates them.",
-    "answer_type": "ambiguous",
-    "expected_sources": ["attention-is-all-you-need.pdf", "bert-pretraining.pdf", "gpt3-few-shot-learners.pdf"]
-  },
-  {
-    "id": "ambiguous-02",
-    "question": "What data was the model trained on?",
-    "expected_answer": "Depends which model: the Transformer trained on WMT 2014 parallel translation corpora, BERT on BooksCorpus plus English Wikipedia, GPT-3 on filtered Common Crawl plus WebText2, books corpora and Wikipedia, and RAG uses a Wikipedia dense index as its non-parametric memory.",
-    "answer_type": "ambiguous",
-    "expected_sources": ["attention-is-all-you-need.pdf", "bert-pretraining.pdf", "gpt3-few-shot-learners.pdf", "retrieval-augmented-generation.pdf"]
-  },
-  {
-    "id": "ambiguous-03",
-    "question": "Does the model require fine-tuning?",
-    "expected_answer": "Depends which model: BERT is explicitly designed to be fine-tuned per downstream task, GPT-3 is applied without fine-tuning via few-shot in-context learning, and Constitutional AI fine-tunes a model using self-critiques and AI feedback.",
-    "answer_type": "ambiguous",
-    "expected_sources": ["bert-pretraining.pdf", "gpt3-few-shot-learners.pdf", "constitutional-ai.pdf"]
-  },
-  {
-    "id": "ambiguous-04",
-    "question": "What kind of attention does the model use?",
-    "expected_answer": "Depends on context: the Transformer defines scaled dot-product attention and multi-head attention, used as encoder self-attention, masked decoder self-attention, and encoder-decoder cross-attention; BERT uses bidirectional self-attention while GPT-style models use causal masked self-attention.",
-    "answer_type": "ambiguous",
-    "expected_sources": ["attention-is-all-you-need.pdf", "bert-pretraining.pdf"]
-  },
-  {
-    "id": "ambiguous-05",
-    "question": "What benchmark results are reported?",
-    "expected_answer": "Depends which paper: BLEU scores on WMT translation for the Transformer, GLUE and SQuAD for BERT, a wide range of NLP benchmarks for GPT-3, open-domain QA benchmarks for RAG, and arithmetic/commonsense reasoning benchmarks such as GSM8K for chain-of-thought prompting.",
-    "answer_type": "ambiguous",
-    "expected_sources": ["attention-is-all-you-need.pdf", "bert-pretraining.pdf", "gpt3-few-shot-learners.pdf", "retrieval-augmented-generation.pdf", "chain-of-thought-prompting.pdf"]
-  },
-  {
-    "id": "ambiguous-06",
-    "question": "How is feedback used to train the model?",
-    "expected_answer": "Depends which approach: Constitutional AI uses AI-generated feedback (RLAIF) guided by a constitution, contrasted with RLHF which uses human preference labels; the pre-training of Transformer, BERT and GPT-3 uses no preference feedback at all, only self-supervised objectives.",
-    "answer_type": "ambiguous",
-    "expected_sources": ["constitutional-ai.pdf"]
   }
 ]
