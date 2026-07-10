@@ -23,8 +23,8 @@ class Settings(BaseSettings):
     
     # Model Configuration
     embedding_model: str = "gemini-embedding-2"
-    generation_model: str = "gemini-2.5-pro"
-    judge_model: str = "gemini-2.5-pro"
+    generation_model: str = "gemini-3.1-flash-lite"
+    judge_model: str = "gemini-3.1-flash-lite"
     
     # Data Storage
     collection_name: str = "rag_chunks_gemini"
