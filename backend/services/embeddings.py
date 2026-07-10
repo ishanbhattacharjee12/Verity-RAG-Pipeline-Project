@@ -1,12 +1,12 @@
-"""Embedding generation (OpenAI) and dense vector storage (ChromaDB)."""
+"""Embedding generation (Gemini) and dense vector storage (ChromaDB)."""
 
 import asyncio
 import logging
 
 import chromadb
-import openai
+from google import genai
+from google.genai.errors import APIError
 from chromadb.api.models.Collection import Collection
-from openai import AsyncOpenAI
 
 from config import settings
 from exceptions import LLMResponseError
@@ -29,7 +29,7 @@ class EmbeddingStore:
             name=settings.collection_name,
             metadata={"hnsw:space": "cosine"},
         )
-        self._openai = AsyncOpenAI(api_key=settings.openai_api_key, max_retries=8)
+        self._gemini = genai.Client(api_key=settings.gemini_api_key)
 
     async def embed_texts(self, texts: list[str]) -> list[list[float]]:
         """Embed a list of texts, batching to stay under request limits."""
@@ -37,12 +37,14 @@ class EmbeddingStore:
         try:
             for start in range(0, len(texts), EMBED_BATCH_SIZE):
                 batch = texts[start : start + EMBED_BATCH_SIZE]
-                response = await self._openai.embeddings.create(
-                    model=settings.embedding_model, input=batch
+                response = await self._gemini.aio.models.embed_content(
+                    model=settings.embedding_model, contents=batch
                 )
-                embeddings.extend(item.embedding for item in response.data)
-        except openai.APIError as exc:
-            raise LLMResponseError(f"OpenAI embedding request failed: {exc}") from exc
+                embeddings.extend(item.values for item in response.embeddings)
+        except APIError as exc:
+            raise LLMResponseError(f"Gemini embedding request failed: {exc}") from exc
+        except Exception as exc:
+            raise LLMResponseError(f"Unexpected embedding error: {exc}") from exc
         return embeddings
 
     async def embed_query(self, query: str) -> list[float]:

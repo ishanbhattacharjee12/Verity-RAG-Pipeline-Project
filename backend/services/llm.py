@@ -1,38 +1,37 @@
-"""Thin wrapper around the OpenAI chat API for generation and LLM-as-judge calls."""
+"""Thin wrapper around the Gemini API for generation and LLM-as-judge calls."""
 
 import asyncio
 import json
 import logging
 from typing import Any
 
-import openai
-from openai import AsyncOpenAI
+from google import genai
+from google.genai import types
+from google.genai.errors import APIError
 
 from config import settings
 from exceptions import LLMResponseError
 
 logger = logging.getLogger(__name__)
 
-# Generous retry budget: low-tier OpenAI orgs have small TPM limits and the SDK
-# honors Retry-After on 429s, so retrying is the correct behavior under burst load.
-_client = AsyncOpenAI(api_key=settings.openai_api_key, max_retries=8)
+# Initialize the official Google GenAI SDK client
+_client = genai.Client(api_key=settings.gemini_api_key)
 
-# Statuses the SDK won't retry but that are transient at OpenAI's edge in practice
-# (431 "request headers too large" shows up spuriously under concurrent load).
-_TRANSIENT_STATUSES = {431, 500, 502, 503}
+# Transient statuses for retries
+_TRANSIENT_STATUSES = {429, 500, 502, 503}
 
 
 async def _create_completion(system: str, user: str, model: str, temperature: float) -> str | None:
-    response = await _client.chat.completions.create(
+    response = await _client.aio.models.generate_content(
         model=model,
-        temperature=temperature,
-        response_format={"type": "json_object"},
-        messages=[
-            {"role": "system", "content": system},
-            {"role": "user", "content": user},
-        ],
+        contents=user,
+        config=types.GenerateContentConfig(
+            system_instruction=system,
+            temperature=temperature,
+            response_mime_type="application/json",
+        ),
     )
-    return response.choices[0].message.content
+    return response.text
 
 
 async def chat_json(
@@ -40,24 +39,26 @@ async def chat_json(
 ) -> dict[str, Any]:
     """Single chat completion constrained to a JSON object; parsed and returned.
 
-    OpenAI failures are mapped to LLMResponseError so the API layer returns a
+    Gemini failures are mapped to LLMResponseError so the API layer returns a
     structured 502 instead of an opaque 500.
     """
     resolved_model = model or settings.judge_model
     try:
         try:
             content = await _create_completion(system, user, resolved_model, temperature)
-        except openai.APIStatusError as exc:
-            if exc.status_code not in _TRANSIENT_STATUSES:
+        except APIError as exc:
+            if exc.code not in _TRANSIENT_STATUSES:
                 raise
             logger.warning(
-                "openai_transient_error_retrying",
-                extra={"status": exc.status_code, "model": resolved_model},
+                "gemini_transient_error_retrying",
+                extra={"status": exc.code, "model": resolved_model},
             )
             await asyncio.sleep(1.0)
             content = await _create_completion(system, user, resolved_model, temperature)
-    except openai.APIError as exc:
-        raise LLMResponseError(f"OpenAI request failed: {exc}") from exc
+    except APIError as exc:
+        raise LLMResponseError(f"Gemini request failed: {exc}") from exc
+    except Exception as exc:
+        raise LLMResponseError(f"Unexpected error: {exc}") from exc
 
     if not content:
         raise LLMResponseError("Model returned an empty response")

@@ -9,24 +9,31 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     # Required
-    openai_api_key: str
-
-    # Storage
-    chroma_persist_dir: str = "./data/chroma"
-    bm25_persist_dir: str = "./data/bm25"
+    gemini_api_key: str
+    
+    # Store indices separately for Gemini since dimensions (768) differ from OpenAI (1536)
+    chroma_persist_dir: str = "./data/chroma_gemini"
+    bm25_persist_dir: str = "./data/bm25_gemini"
+    
+    # Retrieval Settings
+    bm25_weight: float = 0.3
+    dense_weight: float = 0.7
+    hybrid_k: int = 15
+    rerank_top_k: int = 5
+    
+    # Model Configuration
+    embedding_model: str = "gemini-embedding-2"
+    generation_model: str = "gemini-2.5-pro"
+    judge_model: str = "gemini-2.5-pro"
+    
+    # Data Storage
+    collection_name: str = "rag_chunks_gemini"
     documents_dir: str = "./data/documents"
     sample_corpus_dir: str = "./data/sample_corpus"
     golden_qa_path: str = "./data/golden_qa.json"
     query_log_path: str = "./data/query_log.json"
     eval_runs_path: str = "./data/eval_runs.json"
 
-    # Models
-    embedding_model: str = "text-embedding-3-small"
-    generation_model: str = "gpt-4o"
-    judge_model: str = "gpt-4o"
-
-    # Retrieval / indexing
-    collection_name: str = "rag_chunks"
     dedup_threshold: float = 0.95
     rrf_k: int = 60
     default_dense_weight: float = 0.7
